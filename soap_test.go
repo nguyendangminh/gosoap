@@ -1,4 +1,4 @@
-package gosoap
+package soap
 
 import (
 	"testing"
@@ -24,9 +24,9 @@ var (
 	}
 )
 
-func TestSoapClient(t *testing.T) {
+func TestNewClient(t *testing.T) {
 	for _, sct := range scts {
-		_, err := SoapClient(sct.URL)
+		_, err := NewClient(sct.URL)
 		if err != nil && sct.Err {
 			t.Errorf("URL: %s - error: %s", sct.URL, err)
 		}
@@ -64,7 +64,7 @@ var (
 )
 
 func TestClient_Call(t *testing.T) {
-	soap, err := SoapClient("http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl")
+	soap, err := NewClient("http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl")
 	if err != nil {
 		t.Errorf("error not expected: %s", err)
 	}
@@ -91,7 +91,7 @@ func TestClient_Call(t *testing.T) {
 		t.Errorf("error: %+v", rv)
 	}
 
-	soap, err = SoapClient("http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL")
+	soap, err = NewClient("http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL")
 	if err != nil {
 		t.Errorf("error not expected: %s", err)
 	}
@@ -107,7 +107,7 @@ func TestClient_Call(t *testing.T) {
 		t.Errorf("error: %+v", rc)
 	}
 
-	soap, err = SoapClient("http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL")
+	soap, err = NewClient("http://www.dataaccess.com/webservicesserver/numberconversion.wso?WSDL")
 	if err != nil {
 		t.Errorf("error not expected: %s", err)
 	}
@@ -123,7 +123,7 @@ func TestClient_Call(t *testing.T) {
 		t.Errorf("error: %+v", rn)
 	}
 
-	soap, err = SoapClient("https://domains.livedns.co.il/API/DomainsAPI.asmx?WSDL")
+	soap, err = NewClient("https://domains.livedns.co.il/API/DomainsAPI.asmx?WSDL")
 	if err != nil {
 		t.Errorf("error not expected: %s", err)
 	}

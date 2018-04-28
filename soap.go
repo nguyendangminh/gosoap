@@ -1,4 +1,4 @@
-package gosoap
+package soap
 
 import (
 	"bytes"
@@ -13,8 +13,8 @@ import (
 // Params type is used to set the params in soap request
 type Params map[string]string
 
-// SoapClient return new *Client to handle the requests with the WSDL
-func SoapClient(wsdl string) (*Client, error) {
+// NewClient return new *Client to handle the requests with the WSDL
+func NewClient(wsdl string) (*Client, error) {
 	_, err := url.Parse(wsdl)
 	if err != nil {
 		return nil, err

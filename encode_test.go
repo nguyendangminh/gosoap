@@ -1,4 +1,4 @@
-package gosoap
+package soap
 
 import (
 	"testing"
@@ -17,7 +17,7 @@ var (
 )
 
 func TestClient_MarshalXML(t *testing.T) {
-	soap, err := SoapClient("http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl")
+	soap, err := NewClient("http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl")
 	if err != nil {
 		t.Errorf("error not expected: %s", err)
 	}

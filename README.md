@@ -34,7 +34,7 @@ var (
 )
 
 func main() {
-	soap, err := gosoap.SoapClient("http://www.webservicex.net/geoipservice.asmx?WSDL")
+	soap, err := gosoap.NewClient("http://www.webservicex.net/geoipservice.asmx?WSDL")
 	if err != nil {
 		fmt.Errorf("error not expected: %s", err)
 	}
