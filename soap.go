@@ -2,6 +2,7 @@ package soap
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
@@ -61,12 +62,12 @@ func (c *Client) Call(m string, p Params) (err error) {
 
 	c.payload, err = xml.MarshalIndent(c, "", "")
 	if err != nil {
-		return err
+		return fmt.Errorf("MarshalIndent failed: %s", err.Error())
 	}
 
 	b, err := c.doRequest(c.Definitions.Services[0].Ports[0].SoapAddresses[0].Location)
 	if err != nil {
-		return err
+		return fmt.Errorf("doRequest failed: %s", err.Error())
 	}
 
 	var soap SoapEnvelope
@@ -75,7 +76,10 @@ func (c *Client) Call(m string, p Params) (err error) {
 	c.Body = soap.Body.Contents
 	c.Header = soap.Header.Contents
 
-	return err
+	if err != nil {
+		return fmt.Errorf("Unmarshal response failed: %s", err.Error())
+	}
+	return nil
 }
 
 // Unmarshal get the body and unmarshal into the interface
@@ -100,20 +104,24 @@ func (c *Client) doRequest(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	client := &http.Client{}
+	// TODO: Refactor later for accepting self signed certificate
+	// client := &http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
 
 	req.ContentLength = int64(len(c.payload))
 
 	req.Header.Add("Content-Type", "text/xml;charset=UTF-8")
 	req.Header.Add("Accept", "text/xml")
 	req.Header.Add("SOAPAction", fmt.Sprintf("%s/%s", c.URL, c.Method))
-
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	// TODO: Handle HTTP error first
 
 	return ioutil.ReadAll(resp.Body)
 }

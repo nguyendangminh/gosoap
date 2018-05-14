@@ -1,6 +1,7 @@
 package soap
 
 import (
+	"crypto/tls"
 	"encoding/xml"
 	"io/ioutil"
 	"net/http"
@@ -154,6 +155,9 @@ type xsdMaxInclusive struct {
 
 // getwsdlDefinitions sent request to the wsdl url and set definitions on struct
 func getWsdlDefinitions(u string) (wsdl *wsdlDefinitions, err error) {
+	//TODO: Refactor later
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+
 	r, err := http.Get(u)
 	if err != nil {
 		return nil, err
